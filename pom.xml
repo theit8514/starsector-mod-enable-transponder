@@ -56,6 +56,14 @@
       <systemPath>${project.basedir}/lib/starfarer.api.jar</systemPath>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.lazywizard.console</groupId>
+      <artifactId>lw-console</artifactId>
+      <version>2021.12.25</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/lw_Console.jar</systemPath>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 
   <build>
