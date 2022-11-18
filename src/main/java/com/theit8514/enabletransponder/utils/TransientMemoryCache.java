@@ -45,7 +45,8 @@ public class TransientMemoryCache extends BaseGenericPlugin {
     }
 
     public Set<?> getSet(String key) {
-        return this.data.get(key) instanceof Set ? (Set<?>) this.data.get(key) : null;
+        Object value = this.data.get(key);
+        return value instanceof Set ? (Set<?>) value : null;
     }
 
     public String getString(String key) {
