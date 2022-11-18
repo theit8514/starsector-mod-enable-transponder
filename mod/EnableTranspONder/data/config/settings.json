@@ -1,0 +1,5 @@
+{
+    # If you touch this dont come complaining when it crashes
+    # The CSV file that stores the patrol fleet names. Use this if your patrol fleets are not detected.
+    "EnableTranspONder_patrolFleetNamesList": "data/config/enabletranspONder/patrol_fleet_names.csv",
+}

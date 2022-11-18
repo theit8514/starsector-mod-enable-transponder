@@ -1,0 +1,12 @@
+{
+	"id": "theit8514_enabletransponder",
+	"name": "Enable TranspONder",
+	"author": "theit8514",
+	"version": "0.1",
+	"description": "Ensures you never forget your transponder again.",
+	"gameVersion": "0.95.1a-RC6",
+	"jars": [
+		"jars/EnableTranspONder.jar"
+	],
+	"modPlugin": "com.theit8514.enabletransponder.EnableTransponderPlugin"
+}
