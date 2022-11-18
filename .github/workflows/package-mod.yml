@@ -1,0 +1,29 @@
+name: Create mod Archive
+on: 
+  push:
+    branches:
+      - 'main'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@master
+    - id: set_var
+      run: |
+        version=`jq -r '.version' ./mod/EnableTranspONder/mod_info.json`
+        echo "version=$version" | tee -a "$GITHUB_OUTPUT"
+    - name: Archive Release
+      uses: thedoctor0/zip-release@main
+      with:
+        type: 'zip'
+        filename: 'EnableTranspONder-${{steps.set_var.outputs.version}}.zip'
+        directory: 'mod'
+        path: 'EnableTranspONder'
+    - name: Upload Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "mod/EnableTranspONder-${{steps.set_var.outputs.version}}.zip"
+        name: Enable TranspONder ${{steps.set_var.outputs.version}}
+        tag: "v${{steps.set_var.outputs.version}}"
