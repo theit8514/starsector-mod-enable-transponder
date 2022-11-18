@@ -48,7 +48,7 @@ public class LocationListener implements CurrentLocationChangedListener {
         if (curr.hasTag(EnableTransponderConstants.SYSTEM_COREWORLD_TAG)) {
             if (TransponderNotificationManager.alreadyNotified(locationId)) {
                 log.info(String.format(
-                        "Changed location to %s (a core world), but we've already notified the user for this location.",
+                        "Changed location to %s (a core system), but we've already notified the user for this location.",
                         curr.getName()));
                 return;
             }
