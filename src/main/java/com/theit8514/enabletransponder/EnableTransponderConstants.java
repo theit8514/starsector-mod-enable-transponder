@@ -17,6 +17,8 @@ public class EnableTransponderConstants {
             .getString("EnableTranspONder_patrolFleetNamesList");
     /** Color for highlights */
     public static final Color HIGHLIGHT_COLOR = Global.getSettings().getColor("buttonShortcut");
+    /** Disable flag to completely remove mod */
+    public static final boolean DISABLED = Global.getSettings().getBoolean("EnableTranspONder_disabled");
     // #endregion
 
     // #region Memory Keys
