@@ -1,6 +1,6 @@
 {
     # Completely disable all functions and remove all listeners.
-    "EnableTranspONder_disabled": true,
+    "EnableTranspONder_disabled": false,
 
     # If you touch this dont come complaining when it crashes
     # The CSV file that stores the patrol fleet names. Use this if your patrol fleets are not detected.
