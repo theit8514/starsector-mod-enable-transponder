@@ -39,6 +39,11 @@ public class CampaignListener extends BaseCampaignEventListener {
 			return;
 		}
 
+		if (playerFleet.getContainingLocation().isHyperspace()) {
+			// Probably don't need to notify in hyperspace, which is lawless.
+			return;
+		}
+
 		boolean transponderOn = playerFleet.isTransponderOn();
 		if (transponderOn) {
 			// Our transponder is already on.
