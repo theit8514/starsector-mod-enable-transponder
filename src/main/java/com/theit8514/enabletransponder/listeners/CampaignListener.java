@@ -84,7 +84,7 @@ public class CampaignListener extends BaseCampaignEventListener {
 
 	private boolean isIgnoredFaction(String id) {
 		MemoryAPI memory = Global.getSector().getMemory();
-		return memory.getBoolean(EnableTransponderConstants.FACTION_IGNORE_PREFIX + id) ||
-				memory.getBoolean(EnableTransponderConstants.FACTION_NEVER_NOTIFY_PREFIX + id);
+		return memory.getBoolean(EnableTransponderConstants.FACTION_IGNORE_KEY_PREFIX + id) ||
+				memory.getBoolean(EnableTransponderConstants.FACTION_NEVER_NOTIFY_KEY_PREFIX + id);
 	}
 }

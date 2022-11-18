@@ -21,7 +21,7 @@ public class TransponderHelper {
         MemoryAPI memory = Global.getSector().getMemoryWithoutUpdate();
 
         for (String key : memory.getKeys()) {
-            if (key.contains(EnableTransponderConstants.FLEET_PATROL_LIST_PREFIX))
+            if (key.contains(EnableTransponderConstants.FLEET_PATROL_LIST_KEY_PREFIX))
                 allowedList.add(memory.getString(key));
         }
 

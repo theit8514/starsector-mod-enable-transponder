@@ -163,6 +163,6 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
     }
 
     private void setIgnoredFaction(String id) {
-        Global.getSector().getMemory().set(EnableTransponderConstants.FACTION_IGNORE_PREFIX + id, true);
+        Global.getSector().getMemory().set(EnableTransponderConstants.FACTION_IGNORE_KEY_PREFIX + id, true);
     }
 }

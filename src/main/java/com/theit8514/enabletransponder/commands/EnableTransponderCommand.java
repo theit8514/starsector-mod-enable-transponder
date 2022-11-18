@@ -63,7 +63,7 @@ public class EnableTransponderCommand implements BaseCommand {
                 }
                 String id = faction.getId();
                 MemoryAPI memory = Global.getSector().getMemory();
-                String key = EnableTransponderConstants.FACTION_IGNORE_PREFIX + id;
+                String key = EnableTransponderConstants.FACTION_IGNORE_KEY_PREFIX + id;
                 log.info(String.format("clear faction: %s %s", id, key));
                 if (memory.getBoolean(key)) {
                     memory.unset(key);
