@@ -1,8 +1,8 @@
 name: Create mod Archive
 on: 
   push:
-    branches:
-      - 'main'
+    tags:
+      - 'releases/**'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,4 +26,3 @@ jobs:
       with:
         artifacts: "mod/EnableTranspONder-${{steps.set_var.outputs.version}}.zip"
         name: Enable TranspONder ${{steps.set_var.outputs.version}}
-        tag: "v${{steps.set_var.outputs.version}}"
