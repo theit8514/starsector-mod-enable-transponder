@@ -16,6 +16,12 @@
             "group": "test"
         },
         {
+            "label": "update-version",
+            "type": "shell",
+            "command": "./scripts/update-version.ps1",
+            "problemMatcher": []
+        },
+        {
             "label": "deploy",
             "type": "shell",
             "command": "./deploy.sh",
@@ -30,7 +36,8 @@
             },
             "problemMatcher": [],
             "dependsOn": [
-                "verify"
+                "verify",
+                "update-version"
             ]
         }
     ]
