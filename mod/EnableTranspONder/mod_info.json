@@ -2,7 +2,7 @@
 	"id": "theit8514_enabletransponder",
 	"name": "Enable TranspONder",
 	"author": "theit8514",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Ensures you never forget your transponder again.",
 	"gameVersion": "0.95.1a-RC6",
 	"jars": [
