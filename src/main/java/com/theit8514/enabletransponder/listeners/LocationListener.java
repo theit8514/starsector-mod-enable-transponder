@@ -94,7 +94,7 @@ public class LocationListener implements CurrentLocationChangedListener {
 
     private boolean isIgnoredFaction(FactionAPI faction) {
         if (faction.isPlayerFaction()) {
-            return false;
+            return true;
         }
 
         String id = faction.getId();
