@@ -20,26 +20,6 @@ If you have Console Commands installed, a console command is available to clear 
 Use `help EnableTranspONder` for syntax.
 
 ## Mod Authors
-If you are a mod author, and you don't use the standard fleet patrol names, you may need to add a config to your mod or
-set a memory key identifying them. In addition, if your faction should not care about transponder status, and you
-don't have allowsTransponderOffTrade set to true, you can set a memory key to ignore your faction.
-
-### Faction Patrol Fleet Names
-I have not found a way to check for the 'fleetType' of a spawned fleet, so I only have the name to go off. If your
-fleet names do not contain the normal patrol fleet names, you can create a
-data/config/enabletranspONder/patrol_fleet_names.csv and include the fleet name or Regex Patterns to match your patrol
-fleet names.
-
-The mod will also check for a memory key starting with $EnableTranspONder_fleet_patrol_ with the value of your fleet
-name or Regex Pattern.
-
-Example:
-```
-$EnableTranspONder_fleet_patrol_mymod_1=My Cool Fleet Name
-$EnableTranspONder_fleet_patrol_mymod_2=.*My Pattern.*
-```
-
-All checks are case-insensitive.
 
 ### Faction Ignore
 If you want your faction to be ignored, you can set this memory key to true and it will never trigger a notification.
