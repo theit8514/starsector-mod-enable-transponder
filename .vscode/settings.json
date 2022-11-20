@@ -2,6 +2,6 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "files.associations": {
         "**/mod/EnableTranspONder/data/config/settings.json": "ini",
-        "**/mod/EnableTranspONder/EnableTranspONder.version": "ini",
+        "**/mod/EnableTranspONder/EnableTranspONder.version": "json",
     }
 }
