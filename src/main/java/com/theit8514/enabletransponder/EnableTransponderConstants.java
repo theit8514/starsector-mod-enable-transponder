@@ -9,12 +9,6 @@ public class EnableTransponderConstants {
     public static final String MOD_ID = "EnableTranspONder";
 
     // #region Settings
-    /**
-     * The file configured in the settings which stores the fleets to mark as
-     * 'patrol' fleets
-     */
-    public static final String FLEET_PATROL_LIST_FILE = Global.getSettings()
-            .getString("EnableTranspONder_patrolFleetNamesList");
     /** Color for highlights */
     public static final Color HIGHLIGHT_COLOR = Global.getSettings().getColor("buttonShortcut");
     /** Disable flag to completely remove mod */
