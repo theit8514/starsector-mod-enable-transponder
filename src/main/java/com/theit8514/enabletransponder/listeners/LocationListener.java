@@ -4,6 +4,8 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
+import com.fs.starfarer.api.campaign.PlanetAPI;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.CurrentLocationChangedListener;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.theit8514.enabletransponder.EnableTransponderConstants;
@@ -44,29 +46,11 @@ public class LocationListener implements CurrentLocationChangedListener {
 
         boolean coreWorld = curr.hasTag(EnableTransponderConstants.SYSTEM_COREWORLD_TAG);
         FactionAPI playerFaction = playerFleet.getFaction();
-        // Find fleets and statiosn in the current system.
-        List<CampaignFleetAPI> fleets = curr.getFleets();
         HashSet<FactionAPI> factionsWhoCare = new HashSet<FactionAPI>();
-        for (CampaignFleetAPI fleet : fleets) {
-            // Only report on stations.
-            if (fleet.isPlayerFleet() || !fleet.isStationMode()) {
-                continue;
-            }
-
-            log.info("Detected station " + fleet.getName());
-            FactionAPI faction = fleet.getFaction();
-            // Don't notify if the station belongs to a player or an ignored faction.
-            if (isIgnoredFaction(faction)) {
-                continue;
-            }
-
-            boolean hostileTo = faction.isHostileTo(playerFaction);
-            // Only notify if the fleet is friendly or neutral, and if they care about the
-            // transponder status.
-            if (!hostileTo || !faction.getCustomBoolean("allowsTransponderOffTrade")) {
-                factionsWhoCare.add(faction);
-            }
-        }
+        // Find fleets in the current system (this includes a "station" fleet).
+        scanFleets(curr.getFleets(), playerFaction, factionsWhoCare);
+        // Find planets with markets
+        scanPlanets(curr.getPlanets(), playerFaction, factionsWhoCare);
 
         if (!factionsWhoCare.isEmpty()) {
             // Only notify once per location.
@@ -82,6 +66,61 @@ public class LocationListener implements CurrentLocationChangedListener {
                     new EnableTransponderDialogPlugin(factionsWhoCare, curr, coreWorld),
                     Global.getSector().getPlayerFleet());
             return;
+        }
+    }
+
+    private void scanFleets(List<CampaignFleetAPI> fleets, FactionAPI playerFaction,
+            HashSet<FactionAPI> factionsWhoCare) {
+        for (CampaignFleetAPI fleet : fleets) {
+            // Only report on stations.
+            if (fleet.isPlayerFleet() || !fleet.isStationMode()) {
+                continue;
+            }
+
+            log.info("Detected station " + fleet.getName());
+            FactionAPI faction = fleet.getFaction();
+            if (factionsWhoCare.contains(faction)) {
+                continue;
+            }
+
+            // Don't notify if the station belongs to a player or an ignored faction.
+            if (isIgnoredFaction(faction)) {
+                continue;
+            }
+
+            boolean hostileTo = faction.isHostileTo(playerFaction);
+            // Only notify if the fleet is friendly or neutral, and if they care about the
+            // transponder status.
+            if (!hostileTo || !faction.getCustomBoolean("allowsTransponderOffTrade")) {
+                factionsWhoCare.add(faction);
+            }
+        }
+    }
+
+    private void scanPlanets(List<PlanetAPI> planets, FactionAPI playerFaction, HashSet<FactionAPI> factionsWhoCare) {
+        for (PlanetAPI planet : planets) {
+            MarketAPI market = planet.getMarket();
+            if (market == null) {
+                continue;
+            }
+
+            FactionAPI faction = market.getFaction();
+            log.info("Detected market " + market.getName());
+            if (factionsWhoCare.contains(faction)) {
+                continue;
+            }
+
+            // Don't notify if the station belongs to a player or an ignored faction.
+            if (isIgnoredFaction(faction)) {
+                continue;
+            }
+
+            boolean hostileTo = faction.isHostileTo(playerFaction);
+            // Only notify if the fleet is friendly or neutral, and if they care about the
+            // transponder status.
+            if (!hostileTo || !faction.getCustomBoolean("allowsTransponderOffTrade")) {
+                factionsWhoCare.add(faction);
+            }
         }
     }
 
