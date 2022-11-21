@@ -6,8 +6,9 @@
         {
             "label": "verify",
             "type": "shell",
-            "command": "mvn -B verify",
-            "group": "build"
+            "command": "mvn -B --color=always clean verify",
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "label": "test",
