@@ -4,4 +4,4 @@ REM Create target.txt in the folder of this script to change the destination
 IF EXIST "target.txt" (
     FOR /f "delims=" %%x IN (target.txt) DO set Target=%%x
 )
-robocopy ..\mod\EnableTranspONder "%Target%\mods\EnableTranspONder" /e /v /mir
+(robocopy ..\mod\EnableTranspONder "%Target%\mods\EnableTranspONder" /e /v /mir) ^& IF %ERRORLEVEL% LSS 8 SET ERRORLEVEL = 0
