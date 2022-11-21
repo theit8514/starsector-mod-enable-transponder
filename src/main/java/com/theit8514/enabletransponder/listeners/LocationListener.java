@@ -10,6 +10,7 @@ import com.theit8514.enabletransponder.EnableTransponderConstants;
 import com.theit8514.enabletransponder.dialog.EnableTransponderDialogPlugin;
 import com.theit8514.enabletransponder.utils.TransponderNotificationManager;
 
+import java.util.HashSet;
 import java.util.List;
 import org.apache.log4j.Logger;
 
@@ -41,23 +42,11 @@ public class LocationListener implements CurrentLocationChangedListener {
             return;
         }
 
-        if (curr.hasTag(EnableTransponderConstants.SYSTEM_COREWORLD_TAG)) {
-            if (TransponderNotificationManager.alreadyNotified(locationId)) {
-                log.info(String.format(
-                        "Changed location to %s (a core system), but we've already notified the user for this location.",
-                        curr.getName()));
-                return;
-            }
-
-            Global.getSector().getCampaignUI().showInteractionDialog(
-                    new EnableTransponderDialogPlugin(curr, true),
-                    Global.getSector().getPlayerFleet());
-            return;
-        }
-
+        boolean coreWorld = curr.hasTag(EnableTransponderConstants.SYSTEM_COREWORLD_TAG);
         FactionAPI playerFaction = playerFleet.getFaction();
         // Find fleets and statiosn in the current system.
         List<CampaignFleetAPI> fleets = curr.getFleets();
+        HashSet<FactionAPI> factionsWhoCare = new HashSet<FactionAPI>();
         for (CampaignFleetAPI fleet : fleets) {
             // Only report on stations.
             if (fleet.isPlayerFleet() || !fleet.isStationMode()) {
@@ -75,20 +64,24 @@ public class LocationListener implements CurrentLocationChangedListener {
             // Only notify if the fleet is friendly or neutral, and if they care about the
             // transponder status.
             if (!hostileTo || !faction.getCustomBoolean("allowsTransponderOffTrade")) {
-                // Only notify once per location.
-                if (TransponderNotificationManager.alreadyNotified(locationId)) {
-                    log.info(String.format(
-                            "Changed location to %s (a system owned by %s), but we've already notified the user for this location.",
-                            curr.getName(),
-                            faction.getDisplayName()));
-                    return;
-                }
+                factionsWhoCare.add(faction);
+            }
+        }
 
-                Global.getSector().getCampaignUI().showInteractionDialog(
-                        new EnableTransponderDialogPlugin(faction),
-                        Global.getSector().getPlayerFleet());
+        if (!factionsWhoCare.isEmpty()) {
+            // Only notify once per location.
+            if (TransponderNotificationManager.alreadyNotified(locationId)) {
+                log.info(String.format(
+                        "Changed location to %s (a system owned by %d factions), but we've already notified the user for this location.",
+                        curr.getName(),
+                        factionsWhoCare.size()));
                 return;
             }
+
+            Global.getSector().getCampaignUI().showInteractionDialog(
+                    new EnableTransponderDialogPlugin(factionsWhoCare, curr, coreWorld),
+                    Global.getSector().getPlayerFleet());
+            return;
         }
     }
 
