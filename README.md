@@ -1,6 +1,8 @@
 # Enable TranspONder
 A StarSector mod to always make sure you never forget your transponder
 
+![Preview image](images/preview1.png)
+
 ## Usage
 Download the [release package](https://github.com/theit8514/starsector-mod-enable-transponder/releases/latest) and extract into your StarSector mods folder.
 This is usually C:\Program Files (x86)\Fractal Softworks\Starsector\mods on Windows.
