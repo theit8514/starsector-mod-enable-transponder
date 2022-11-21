@@ -86,7 +86,7 @@ public class LocationListener implements CurrentLocationChangedListener {
     }
 
     private boolean isIgnoredFaction(FactionAPI faction) {
-        if (faction.isPlayerFaction()) {
+        if (faction.isPlayerFaction() || faction.isNeutralFaction()) {
             return true;
         }
 
