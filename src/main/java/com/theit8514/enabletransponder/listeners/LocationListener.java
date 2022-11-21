@@ -77,8 +77,8 @@ public class LocationListener implements CurrentLocationChangedListener {
                 continue;
             }
 
-            log.info("Detected station " + fleet.getName());
             FactionAPI faction = fleet.getFaction();
+            log.info(String.format("Detected station %s owned by faction %s", fleet.getName(), faction.getDisplayName()));
             if (factionsWhoCare.contains(faction)) {
                 continue;
             }
@@ -105,7 +105,7 @@ public class LocationListener implements CurrentLocationChangedListener {
             }
 
             FactionAPI faction = market.getFaction();
-            log.info("Detected market " + market.getName());
+            log.info(String.format("Detected market %s owned by faction %s", market.getName(), faction.getDisplayName()));
             if (factionsWhoCare.contains(faction)) {
                 continue;
             }
