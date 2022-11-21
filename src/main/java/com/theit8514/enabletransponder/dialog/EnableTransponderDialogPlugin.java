@@ -17,22 +17,15 @@ import org.lwjgl.input.Keyboard;
 public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
     public static final Logger log = Global.getLogger(EnableTransponderDialogPlugin.class);
 
-    private enum Option {
-        MAIN,
-        ENABLE_TRANSPONDER,
-        NEVER_FOR_SYSTEM,
-        NEVER_FOR_FACTION,
-        DO_NOTHING,
-    }
-
     private InteractionDialogAPI dialog;
     private OptionPanelAPI options;
     private TextPanelAPI text;
     private boolean coreWorld;
     private LocationAPI location;
-    private FactionAPI faction;
     private VisualPanelAPI visual;
     private Set<FactionAPI> factions;
+
+    private String NEVER_FOR_FACTION_TOOLTIP = "This dialog won't appear when this faction is detected, however it may still show if other conditions are met.";
 
     public EnableTransponderDialogPlugin(Set<FactionAPI> factions, LocationAPI location, boolean coreWorld) {
         this.factions = factions;
@@ -64,9 +57,11 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
     @Override
     public void optionSelected(String optionText, Object optionData) {
         options.clearOptions();
-        Option opt = (Option) optionData;
+        CustomOptionData data = optionData instanceof CustomOptionData
+                ? (CustomOptionData) optionData
+                : new CustomOptionData((Option) optionData);
 
-        switch (opt) {
+        switch (data.option) {
             case MAIN:
                 displayMainDialog();
                 break;
@@ -84,15 +79,23 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
                 dialog.dismiss();
                 break;
             case NEVER_FOR_FACTION:
-                if (faction == null) {
-                    log.error("Dialog reached NEVER_FOR_FACTION, but faction is null");
-                    dialog.dismiss();
-                    return;
+                FactionAPI faction = (FactionAPI) data.data;
+                if (faction != null) {
+                    setIgnoredFaction(faction.getId());
+                    factions.remove(faction);
                 }
-                setIgnoredFaction(faction.getId());
-                dialog.dismiss();
+
+                if (factions.isEmpty()) {
+                    displayMainDialog();
+                } else {
+                    displayFactionOptions();
+                }
                 break;
             case DO_NOTHING:
+                dialog.dismiss();
+                break;
+            default:
+                log.error("Unhandled option state " + data.option);
                 dialog.dismiss();
                 break;
         }
@@ -133,8 +136,6 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
             Highlights highlights = new Highlights();
             for (FactionAPI faction : factions) {
                 highlights.append(faction.getDisplayNameWithArticleWithoutArticle(), faction.getBaseUIColor());
-                // text.highlightInLastPara(faction.getBaseUIColor(),
-                // faction.getDisplayNameWithArticleWithoutArticle());
             }
             text.setHighlightsInLastPara(highlights);
         }
@@ -147,6 +148,7 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
                 "Using \"Enable Transponder\" may cause unwanted attention or cause you to be identified.");
         options.setTooltipHighlightColors(Option.ENABLE_TRANSPONDER, EnableTransponderConstants.HIGHLIGHT_COLOR);
         options.setTooltipHighlights(Option.ENABLE_TRANSPONDER, "Enable Transponder");
+
         options.addOption("Keep the transponder off", Option.DO_NOTHING);
         options.setShortcut(Option.DO_NOTHING, Keyboard.KEY_ESCAPE, false, false, false, false);
         options.setTooltip(Option.DO_NOTHING,
@@ -155,13 +157,30 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
         if (location != null) {
             options.addOption("Never for this system", Option.NEVER_FOR_SYSTEM);
             options.setTooltip(Option.NEVER_FOR_SYSTEM,
-                    "This dialog won't appear when you enter this system anymore, however it may still show if other conditions are met.");
+                    "This dialog won't appear when you enter this system in the future, even if one of the factions requires transponder.");
         }
-        if (faction != null) {
-            options.addOption("Never for this faction", Option.NEVER_FOR_FACTION);
-            options.setTooltip(Option.NEVER_FOR_FACTION,
-                    "This dialog won't appear when this faction has a presence in the current system, however it may still show if other conditions are met.");
+
+        if (!factions.isEmpty()) {
+            if (factions.size() == 1) {
+                CustomOptionData neverForFactionOption = new CustomOptionData(Option.NEVER_FOR_FACTION,
+                        factions.iterator().next());
+                options.addOption("Never for this faction", neverForFactionOption);
+                options.setTooltip(neverForFactionOption, NEVER_FOR_FACTION_TOOLTIP);
+            } else {
+                options.addOption("Exclude a faction...", Option.NEVER_FOR_FACTION);
+            }
         }
+    }
+
+    private void displayFactionOptions() {
+        for (FactionAPI faction : factions) {
+            CustomOptionData customOptionData = new CustomOptionData(Option.NEVER_FOR_FACTION, faction);
+            options.addOption(faction.getDisplayName(), customOptionData, faction.getBaseUIColor(), "");
+            options.setTooltip(customOptionData, NEVER_FOR_FACTION_TOOLTIP);
+        }
+
+        options.addOption("Go back", Option.MAIN);
+        options.setShortcut(Option.MAIN, Keyboard.KEY_ESCAPE, false, false, false, false);
     }
 
     private String getFactionNames() {
@@ -180,6 +199,7 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
                 sb.append(" and ");
             }
         }
+
         sb.setLength(sb.length() - 2);
         return sb.toString();
     }
@@ -211,5 +231,27 @@ public class EnableTransponderDialogPlugin implements InteractionDialogPlugin {
 
     private void setIgnoredFaction(String id) {
         Global.getSector().getMemory().set(EnableTransponderConstants.FACTION_IGNORE_KEY_PREFIX + id, true);
+    }
+
+    private enum Option {
+        MAIN,
+        ENABLE_TRANSPONDER,
+        NEVER_FOR_SYSTEM,
+        NEVER_FOR_FACTION,
+        DO_NOTHING,
+    }
+
+    private class CustomOptionData {
+        private Option option;
+        private Object data;
+
+        public CustomOptionData(Option option) {
+            this.option = option;
+        }
+
+        public CustomOptionData(Option option, Object data) {
+            this.option = option;
+            this.data = data;
+        }
     }
 }
