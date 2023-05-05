@@ -1,11 +1,11 @@
 {
   "masterVersionFile": "https://raw.githubusercontent.com/theit8514/starsector-mod-enable-transponder/main/mod/EnableTranspONder/EnableTranspONder.version",
   "modName": "Enable TranspONder",
-  "modThreadId": null,
+  "modThreadId": 25704,
   "modNexusId": null,
   "modVersion": {
     "major": 0,
     "minor": 1,
-    "patch": "3"
+    "patch": "4"
   }
 }
