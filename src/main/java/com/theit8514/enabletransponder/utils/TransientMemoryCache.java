@@ -11,7 +11,7 @@ import com.fs.starfarer.api.impl.campaign.BaseGenericPlugin;
 public class TransientMemoryCache extends BaseGenericPlugin {
     private final transient LinkedHashMap<String, Object> data = new LinkedHashMap<>();
 
-    public TransientMemoryCache() {
+    private TransientMemoryCache() {
     }
 
     public static TransientMemoryCache getInstance() {
